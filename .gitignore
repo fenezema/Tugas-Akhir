@@ -1,0 +1,12 @@
+resources/
+preview/
+coba/
+__pycache__/
+anotherResources/
+backup/
+data/
+cfg/
+DLL_Release/
+nogpu_Release/
+Release/
+results/

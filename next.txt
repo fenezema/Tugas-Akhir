@@ -1,0 +1,41 @@
+1. 6000++ data val_acc masih di angka 70%++ dengan loss 1.4++
+Adam lebih adaptif daripada SGD(?) train_acc meningkat lebih cepat
+tapi pada 9k epoch, val_acc masih berada di tempat yang sama. Sekitar 70%
+
+what to do???
+1. Di coba tambah data nya. Data yang sudah ter augment, di augment lagi. (Miss code sempat membuat data menjadi 10k. Tapi pada epoch 2k, val_acc sudah berada di angka 80%++) 
+[Tambahkan juga data yang baik, jadi nomor 0]
+[Data Augment dari x21, tambah lagi x10, total per char min 1260 data]
+{Data sudah jadi 75k++. Akurasi train menurun (1000epochs) menjadi 80%++. Tapi Akurasi test jadi 85%++}
+2. Lihat dulu model yang sekarang sudah mendekati konvergen di epoch berapa. Baru plus minus di test berikutnya. 
+[2000++, tapi coba dulu 1000]
+{1000 epochs sepertinya sudah cukup? Tapi sepertinya bisa lebih, karena grafik masih cenderung naik. Cuma kalau lebih, waktu proses lebih lama. Dipercepat dengan batch_size yang lebih besar(?)}
+
+3new. Banyak data yang tidak representatif(?)
+[lihat dulu. Pada data ini, if nya ngaruh tidak]
+[tambahkan data yang lebih baik dan representatif(?)]
+[k-folds(?) Supaya setiap data sempat jadi train dan test]
+{Augment Data nya dibiat tidak terlalu jauh modifikasinya.}
+{Train_acc dan val_acc skrg sudah 90%++ (adam 0.0001lr, 1000epoch v3),
+ImageDataGenerator(rotation_range=10, width_shift_range=0.1, height_shift_range=0.1, shear_range=0.1, zoom_range=0.1, horizontal_flip=False, fill_mode='nearest')}
+3. (Worst?) Plot datanya. Hmm.
+4. Modifikasi model nya? Network coba diubah luls
+
+nitip sebentar rek ehehe -bas
+
+Kalau model sudah fix (bismillah, nanti dicoba pakai data lain), next:
+1. Penentuan ROI pada citra
+[Wavelet yang diapakai tidak bisa detect plat, karena dasar plat nya hitam
+Bu Chastine : inverse(?)
+
+Coba pakai Hough Transform
+
+Coba detect pakai CNN?]
+
+2. Segmentasi yang baik pada karakter
+3. Preprocessing citra 
+
+Kalau dari citra sudah bisa, :
+1. Buat tracking nya.
+
+Nitip lagi rek, ehehe -BAS
