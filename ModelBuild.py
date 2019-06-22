@@ -48,7 +48,9 @@ def modelBuild():
     
     model = Model(inputs=inputs, outputs=outputs)
     optimizer = Adam(lr=0.0001,beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)#beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False
-    #optimizer = SGD(lr=0.0001)
+    # optimizer = SGD(lr=0.0001)
+    # optimizer = Adagrad(lr=0.0001)
+    # optimizer = RMSprop(lr=0.0001)
     return model,optimizer
 
 def train_test_dataSplitting(path):
@@ -92,6 +94,33 @@ def train_test_dataSplitting(path):
     test_y = to_categorical(test_y)
     
     return train_x,train_y,test_x,test_y
+
+def getDatas(path):
+    X = []
+    Y = []
+    dir_list = os.listdir(path)
+    dir_list_char = dir_list[10:len(dir_list)]
+    lab = {dir_list_char[i]:i+10 for i in range(len(dir_list_char))}
+    
+    for directory in dir_list:
+        try:
+            directory_check = lab[directory]
+        except:
+            directory_check = directory
+        current_dir_path = path+directory+"/"
+        current_dir_files = os.listdir(current_dir_path)
+           
+        n = len(current_dir_files)
+
+        for i in range(n):
+            temp = cv2.imread(current_dir_path+current_dir_files[i],0)
+            X.append(temp)
+            Y.append(directory_check)
+                
+    X = np.reshape(X, (len(X), 32, 32, 1))
+    Y = np.array(Y)
+
+    return X,Y
 
 def print_plot(history, filename):
     # summarize history for accuracy

@@ -22,6 +22,7 @@ import random
 import math
 import matplotlib.pyplot as plt
 import time
+import tensorflow as tf
 from ctypes import *
 from multiprocessing import Process
 from imutils.video import FileVideoStream
@@ -32,3 +33,6 @@ from keras.layers import Input, Activation, Dense, Conv2D, MaxPooling2D, Flatten
 from keras.optimizers import Adam, Adagrad, SGD, RMSprop
 from keras.utils.np_utils import to_categorical
 from sklearn.metrics import classification_report
+from sklearn.model_selection import StratifiedKFold
+
+from keras.backend.tensorflow_backend import set_session

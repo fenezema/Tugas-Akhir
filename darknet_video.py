@@ -4,6 +4,14 @@ from ModelBuild import *
 #IMPORT
 
 #GLOBAL INIT
+config = tf.ConfigProto()
+config.gpu_options.per_process_gpu_memory_fraction = 0.2
+set_session(tf.Session(config=config))
+
+model,optimizer = modelBuild()
+model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
+model.load_weights('saved_weights\\45k_data\\ADAM_0,0001_1000epochs_v3.h5')
+labels = {key:chr(key+55) for key in range(10,36)}
 network_path = '\\\\10.151.33.41\\Users\\Chastine\\anotherResources\\'
 #GLOBAL INIT
 
@@ -27,18 +35,35 @@ def getChara(img):
 def segImg(img,nm_fl):
     the_charas_candidate = {}
     the_charas = []
-    imge = img.copy()
+    try:
+        print('masuk try')
+        imge = img.copy()
+    except:
+        return 0,0,0,False
     imggray = cv2.cvtColor(imge,cv2.COLOR_BGR2GRAY)
+    h_imggray,w_imggray = imggray.shape
     pre = ValidationPreprocess()
     imgBin = pre.imageToBinary(redefine={'flag':True,'img':imggray})
+
     kernel = np.ones((3,3),np.uint8)
-    opening = cv2.morphologyEx(imgBin, cv2.MORPH_OPEN, kernel)
-    img1, contours, hierarchy = cv2.findContours(opening ,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+    erode = cv2.erode(imgBin,kernel,iterations = 1)
+    dilate = cv2.dilate(erode,kernel,iterations = 2)
+    erode1 = cv2.erode(dilate,kernel,iterations = 1)
+
+    # erode = cv2.erode(imgBin,kernel,iterations = 1)
+    # dilate = cv2.dilate(erode,kernel,iterations = 3)
+    # erode1 = cv2.erode(dilate,kernel,iterations = 2)
+    # dilate1 = cv2.dilate(erode1,kernel,iterations = 1)
+    # erode2 = cv2.erode(dilate1,kernel,iterations = 1)
+    img1, contours, hierarchy = cv2.findContours(erode1 ,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
     cou = 0
 
     for element in contours:
         x,y,w,h = cv2.boundingRect(element)
-        if h>w and h>17 and w>4 and h<30:
+        if h>w and w/w_imggray > 0.04 and w/w_imggray <=0.15 and h/h_imggray >= 0.29 and h/h_imggray < 0.55:
+            print(h,h_imggray,h/h_imggray)
+            print(w,w_imggray,w/w_imggray)
+            print("masuk if")
             the_charas_candidate[x]=[y,[w,h]]
 #            cv2.imwrite('coba/charas/'+nm_fl+'-'+str(cou)+'-'+str(h)+'-'+str(w)+'.jpg',img[y:y+h,x:x+w])
             cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
@@ -52,8 +77,8 @@ def segImg(img,nm_fl):
         charnya = getChara( imggray[y:y+h,x:x+w] )
         the_charas.append( charnya )
         cou+=1
-#    print(the_charas)
-    return img,opening,the_charas
+    print(the_charas)
+    return img,erode1,the_charas,True
 
 def convertBack(x, y, w, h):
     xmin = int(round(x - (w / 2)))
@@ -155,7 +180,7 @@ def YOLO():
         except Exception:
             pass
     #cap = cv2.VideoCapture(0)
-    cap = cv2.VideoCapture("resources/Datasets/zzz-datatest/test3.MOV")
+    cap = cv2.VideoCapture("resources/Datasets/zzz-datatest/test4.MOV")
     cap.set(3, 1280)
     cap.set(4, 720)
     out = cv2.VideoWriter(
@@ -166,6 +191,8 @@ def YOLO():
     # Create an image we reuse for each detect
     darknet_image = darknet.make_image(darknet.network_width(netMain),
                                     darknet.network_height(netMain),3)
+    result_flag = False
+    font = cv2.FONT_HERSHEY_SIMPLEX
     while True:
         prev_time = time.time()
         ret, frame_read = cap.read()
@@ -185,6 +212,20 @@ def YOLO():
         detections = darknet.detect_image(netMain, metaMain, darknet_image, thresh=0.25)
 
         coor1, coor2, pojok_kiri_atas, pojok_kanan_bawah = calcRealPosition(detections,darknet.network_width(netMain),darknet.network_height(netMain))
+        if coor1 == 0:
+            print(1/(time.time()-prev_time))
+            cv2.imshow('Demo', frame_read)
+            cv2.waitKey(3)
+            continue
+        temp_frame = toShow.copy()
+        found_ROI = temp_frame[ pojok_kiri_atas[1]:pojok_kanan_bawah[1],pojok_kiri_atas[0]:pojok_kanan_bawah[0] ]
+        newly, eroded, the_charas, seg_flag = segImg(found_ROI,"The file")
+        charasnya = ''.join(the_charas)
+        if len(the_charas)==0:
+            charasnya = ""
+        cv2.putText(toShow,'Detected Plate : '+charasnya,(20,100), font, 1,(0,255,0),2,cv2.LINE_AA)
+        cv2.rectangle(toShow, coor1, coor2, (0, 255, 0), 2)
+        """
         if coor1 != 0:
             temp_frame = toShow.copy()
             found_ROI = temp_frame[ pojok_kiri_atas[1]:pojok_kanan_bawah[1],pojok_kiri_atas[0]:pojok_kanan_bawah[0] ]
@@ -194,14 +235,40 @@ def YOLO():
             theData.write('roi.jpg')
             theData.close()
 
-            cv2.rectangle(toShow, coor1, coor2, (0, 255, 0), 2)
+            while True:
+                result = open(network_path+'result.txt','r')
+                try:
+                    tempp = result.read()
+                    if tempp=='0':
+                        continue
+                    elif '.jpg' in tempp:
+                        resnya, ext = tempp.split('.')
+                        result_flag = True
+                        break
+                    elif tempp == 'No Charas found':
+                        result_flag = False
+                        break
+                    else:
+                        result.close()
+                        continue
+                except:
+                    result.close()
 
+            
+            cv2.rectangle(toShow, coor1, coor2, (0, 255, 0), 2)
+            
+            # cv2.rectangle(toShow, (20,20), (100,100), (0, 255, 0), 2)
+            if result_flag == True:
+                cv2.putText(toShow,'Detected Plate : '+resnya,(20,100), font, 1,(0,255,0),2,cv2.LINE_AA)
+            elif result_flag == False:
+                cv2.putText(toShow,'Detected Plate : NONE',(20,100), font, 1,(0,255,0),2,cv2.LINE_AA)
+            result_flag = False
             # image = cvDrawBoxes(detections, frame_resized)
             # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                 
             print(1/(time.time()-prev_time))
             cv2.imshow('Demo', toShow)
-            # cv2.waitKey(3)
+            cv2.waitKey(3)
         elif coor1 == 0:
             image = cvDrawBoxes(detections, frame_resized)
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -212,17 +279,18 @@ def YOLO():
             
             print(1/(time.time()-prev_time))
             cv2.imshow('Demo', frame_read)
-            # cv2.waitKey(3)
+            cv2.waitKey(3)
+        """
         
-        if cv2.waitKey(0) & 0xFF == ord('q'):
-            break
-        continue
+        # if cv2.waitKey(0) & 0xFF == ord('q'):
+        #     break
+        # continue
         # image = cvDrawBoxes(detections, frame_resized)
         # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         
-        # print(detections)
-        # cv2.imshow('Demo', image)
-        # cv2.waitKey(3)
+        print(1/(time.time()-prev_time))
+        cv2.imshow('Demo', toShow)
+        cv2.waitKey(3)
     cap.release()
     out.release()
 

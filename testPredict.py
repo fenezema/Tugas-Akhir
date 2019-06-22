@@ -10,6 +10,9 @@ from ValidationPreprocess import *
 from ModelBuild import *
 ###IMPORT###
 
+config = tf.ConfigProto()
+config.gpu_options.per_process_gpu_memory_fraction = 0.2
+set_session(tf.Session(config=config))
 
 model,optimizer = modelBuild()
 model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
