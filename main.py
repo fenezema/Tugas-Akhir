@@ -54,8 +54,10 @@ def doMakeModel(train_x,train_y,test_x,test_y,toggle=True, kFolds_checker=False,
             scores = model.evaluate(xval,yval)
             print("%s : %.2f%%" % (model.metrics_names[1],scores[1]*100))
             cvscores.append(scores[1]*100)
-        print("All batches accuracy : "+str(cvscores))
-        print("%.2f%% (+/- %.2f%%)" % (np.mean(cvscores), np.std(cvscores)))
+        print("All batches accuracy : ")
+        for element in cvscores:
+            print("Accuracy : "+str(element))
+        print("After all batches accuracy : %.2f%% (+/- %.2f%%)" % (np.mean(cvscores), np.std(cvscores)))
     elif kFolds_checker == False:
         if toggle==True:
             model,optimizer = modelBuild()
@@ -101,7 +103,7 @@ def main():
     
     #if using k-Folds, fill X and Y from returned value from getDatas and fill 4 first parameter with None
     # doMakeModel(train_x,train_y,test_x,test_y,toggle=True)
-    doMakeModel(None,None,None,None,toggle=True, kFolds_checker=True, k=10, X=X, Y=Y)
+    doMakeModel(None,None,None,None,toggle=True, kFolds_checker=True, k=4, X=X, Y=Y)
     
 if __name__=="__main__":
     main()
