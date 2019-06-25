@@ -1,0 +1,43 @@
+W x H
+189x67
+24x33
+20x34
+21x31
+18x32
+18x32
+
+
+157x57
+21x28
+18x28
+16x28
+15x28
+14x28
+
+
+227x80
+22x37
+25x36
+23x36
+22x36
+22x38
+19x38
+
+
+120x39
+10x18
+11x18
+7x18
+
+erode = cv2.erode(imgBin,kernel,iterations = 1)
+dilate = cv2.dilate(erode,kernel,iterations = 2)
+erode1 = cv2.erode(dilate,kernel,iterations = 1)
+
+erode 1
+dilate 3
+erode 2
+dilate 1
+erode 1
+
+
+0.05 sampai 0.13 , 0.46 sampai 0.52

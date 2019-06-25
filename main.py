@@ -39,7 +39,7 @@ def doPreprocessing(img,dir_path,toggle_flag):
     elif toggle_flag == False:
         print("Preprocessing Data process skipped")
 
-def doMakeModel(train_x,train_y,test_x,test_y,toggle=True, kFolds_checker=False, k=10, X=None, Y=None):
+def doMakeModel(train_x,train_y,test_x,test_y,toggle=False, kFolds_checker=False, k=10, X=None, Y=None):
     if kFolds_checker == True:
         seed = 7
         np.random.seed(seed)
@@ -103,7 +103,7 @@ def main():
     
     #if using k-Folds, fill X and Y from returned value from getDatas and fill 4 first parameter with None
     # doMakeModel(train_x,train_y,test_x,test_y,toggle=True)
-    doMakeModel(None,None,None,None,toggle=True, kFolds_checker=True, k=10, X=X, Y=Y)
+    doMakeModel(None,None,None,None,toggle=True, kFolds_checker=True, k=5, X=X, Y=Y)
     
 if __name__=="__main__":
     main()
