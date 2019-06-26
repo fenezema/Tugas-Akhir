@@ -41,6 +41,7 @@ def doPreprocessing(img,dir_path,toggle_flag):
 
 def doMakeModel(train_x,train_y,test_x,test_y,toggle=False, kFolds_checker=False, k=10, X=None, Y=None):
     if kFolds_checker == True:
+        print("Number of batches : "+str(k))
         seed = 7
         np.random.seed(seed)
         kfold = StratifiedKFold(n_splits=k,shuffle=True,random_state=seed)
@@ -82,6 +83,22 @@ def doMakeModel(train_x,train_y,test_x,test_y,toggle=False, kFolds_checker=False
 
 
 def main():
+    args = sys.argv
+    kfolds_index = args.index('--kfolds_flag') + 1
+    if args[kfolds_index] == 'True':
+        kfolds_flag = True
+        k_ind = args.index('--k') + 1
+        try:
+            k_nya = int(args[k_ind])
+        except:
+            return 0
+    elif args[kfolds_index] == 'False':
+        kfolds_flag = False
+        toggle_ind = args.index('--toggle') + 1
+        if args[toggle_ind] == 'True':
+            toggle_nya = True
+        elif args[toggle_ind]:
+            toggle_nya = False
     dataset_path = "resources/Datasets/" # "F:\\Kuliah\\Tugas Akhir\\05111540000055_PBaskara\\src\\resources\\Datasets\\"
     saved_path = "resources/Processed/" #D:\05111540000055_PBaskara\src "F:\\Kuliah\\Tugas Akhir\\05111540000055_PBaskara\\src\\resources\\Processed\\"
     resources_path = "resources/" #D:\05111540000055_PBaskara\src
@@ -93,17 +110,20 @@ def main():
     doPreprocessing(img,dir_path,False)
     #do preprocessing for training
     
-    #split data to train and test
-    """
-    train_x,train_y,test_x,test_y = train_test_dataSplitting(saved_path)
-    print(len(train_x),len(train_y),len(test_x),len(test_y))"""
-
-    #if using k-Folds Cross Validation
-    X, Y = getDatas(saved_path)
+    if kfolds_flag == False:
+        #split data to train and test
+        train_x,train_y,test_x,test_y = train_test_dataSplitting(saved_path)
+        print(len(train_x),len(train_y),len(test_x),len(test_y))
+        doMakeModel(train_x,train_y,test_x,test_y,toggle=toggle_nya)
+    elif kfolds_flag == True:
+        #if using k-Folds Cross Validation
+        X, Y = getDatas(saved_path)
+        #if using k-Folds, fill X and Y from returned value from getDatas and fill 4 first parameter with None
+        doMakeModel(None,None,None,None, kFolds_checker=True, k=k_nya, X=X, Y=Y)
     
     #if using k-Folds, fill X and Y from returned value from getDatas and fill 4 first parameter with None
     # doMakeModel(train_x,train_y,test_x,test_y,toggle=True)
-    doMakeModel(None,None,None,None,toggle=True, kFolds_checker=True, k=5, X=X, Y=Y)
+    # doMakeModel(None,None,None,None,toggle=True, kFolds_checker=True, k=5, X=X, Y=Y)
     
 if __name__=="__main__":
     main()

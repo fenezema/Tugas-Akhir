@@ -22,6 +22,7 @@ import random
 import math
 import matplotlib.pyplot as plt
 import time
+import sys
 import tensorflow as tf
 from ctypes import *
 from multiprocessing import Process
