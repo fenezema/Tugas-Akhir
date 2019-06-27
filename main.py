@@ -70,7 +70,7 @@ def doMakeModel(train_x,train_y,test_x,test_y,toggle=False, kFolds_checker=False
             print("Time:")
             print(sum(time_callback.times))
             
-            scenario_name = 'RMSProp_0,0001_200epochs'
+            scenario_name = 'Adam_Kernel3_3x3_0,0001_200epochs'
             evaluate_model(model, scenario_name, test_x, test_y)
             print_plot(history, scenario_name)
             
@@ -97,7 +97,7 @@ def main():
         toggle_ind = args.index('--toggle') + 1
         if args[toggle_ind] == 'True':
             toggle_nya = True
-        elif args[toggle_ind]:
+        elif args[toggle_ind] == 'False':
             toggle_nya = False
     dataset_path = "resources/Datasets/" # "F:\\Kuliah\\Tugas Akhir\\05111540000055_PBaskara\\src\\resources\\Datasets\\"
     saved_path = "resources/Processed/" #D:\05111540000055_PBaskara\src "F:\\Kuliah\\Tugas Akhir\\05111540000055_PBaskara\\src\\resources\\Processed\\"
@@ -113,7 +113,7 @@ def main():
     if kfolds_flag == False:
         #split data to train and test
         train_x,train_y,test_x,test_y = train_test_dataSplitting(saved_path)
-        print(len(train_x),len(train_y),len(test_x),len(test_y))
+        # print(len(train_x),len(train_y),len(test_x),len(test_y))
         doMakeModel(train_x,train_y,test_x,test_y,toggle=toggle_nya)
     elif kfolds_flag == True:
         #if using k-Folds Cross Validation
