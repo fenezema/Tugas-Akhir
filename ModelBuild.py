@@ -29,7 +29,7 @@ def convolution_layer(inputs, size):
     conv_layer = BatchNormalization()(conv_layer)
     conv_layer = MaxPooling2D((2, 2))(conv_layer)
     
-    conv_layer = Conv2D(32, (2,2), strides=(1,1), kernel_initializer='he_normal')(conv_layer)
+    conv_layer = Conv2D(32, (4,4), strides=(1,1), kernel_initializer='he_normal')(conv_layer)
     conv_layer = LeakyReLU()(conv_layer)
     conv_layer = BatchNormalization()(conv_layer)
     conv_layer = MaxPooling2D((2, 2))(conv_layer)
@@ -121,6 +121,16 @@ def getDatas(path):
     Y = np.array(Y)
 
     return X,Y
+
+def kFolds_plot(k,datas):
+    folds_title = str(k) + ' k-Folds Accuracy'
+    #prints kfolds plots
+    plt.plot(datas)
+    plt.ylabel('accuracy')
+    plt.xlabel('folds')
+    plt.xticks(np.arange(k),np.arange(1,k+1))
+    plt.legend('accuracy',loc='upper left')
+    plt.savefig(folds_title)
 
 def print_plot(history, filename):
     # summarize history for accuracy

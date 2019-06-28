@@ -58,6 +58,7 @@ def doMakeModel(train_x,train_y,test_x,test_y,toggle=False, kFolds_checker=False
         print("All batches accuracy : ")
         for element in cvscores:
             print("Accuracy : "+str(element))
+        kFolds_plot(k,cvscores)
         print("After all batches accuracy : %.2f%% (+/- %.2f%%)" % (np.mean(cvscores), np.std(cvscores)))
     elif kFolds_checker == False:
         if toggle==True:
@@ -70,7 +71,7 @@ def doMakeModel(train_x,train_y,test_x,test_y,toggle=False, kFolds_checker=False
             print("Time:")
             print(sum(time_callback.times))
             
-            scenario_name = 'Adam_Kernel3_3x3_0,0001_200epochs'
+            scenario_name = 'Adam_Kernel3_4x4_0,0001_200epochs'
             evaluate_model(model, scenario_name, test_x, test_y)
             print_plot(history, scenario_name)
             
