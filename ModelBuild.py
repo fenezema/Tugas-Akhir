@@ -129,7 +129,7 @@ def kFolds_plot(k,datas):
     plt.ylabel('accuracy')
     plt.xlabel('folds')
     plt.xticks(np.arange(k),np.arange(1,k+1))
-    plt.legend('accuracy',loc='upper left')
+    plt.title(folds_title)
     plt.savefig(folds_title)
 
 def print_plot(history, filename):
