@@ -24,6 +24,10 @@ import matplotlib.pyplot as plt
 import time
 import sys
 import tensorflow as tf
+import PIL.Image, PIL.ImageTk
+import tkinter.font as font
+import tkinter.filedialog
+from tkinter import *
 from ctypes import *
 from multiprocessing import Process
 from imutils.video import FileVideoStream

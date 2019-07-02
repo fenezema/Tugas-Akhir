@@ -10,6 +10,9 @@ from ModelBuild import *
 #IMPORT
 
 #GLOBAL INIT
+config = tf.ConfigProto()
+config.gpu_options.per_process_gpu_memory_fraction = 0.3
+set_session(tf.Session(config=config))
 model,optimizer = modelBuild()
 model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
 model.load_weights('saved_weights\\45k_data\\ADAM_0,0001_1000epochs_v3.h5')
@@ -177,6 +180,7 @@ def flannBased(bgr,gray,templates,nm_fl):
             cv2.putText(afterHaar,license_plates_string,tuple(pka1), font, 1,(0,255,0),2,cv2.LINE_AA)
 
             """print(checker_flag)"""
+            print(ptss)
             return {'flag':True,'data':[ pka[0]+exp_coor[0],pka[1]+exp_coor[1],pkb[0],pkb[1] ]}
         except:
            return {'flag':False,'data':"No detected ROI found."}
