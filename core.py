@@ -17,7 +17,10 @@ import keras
 import threading
 import operator
 import ast
-import darknet
+try:
+    import darknet
+except:
+    print("Darknet import has failed. Darknet import has been skipped")
 import random
 import math
 import matplotlib.pyplot as plt
