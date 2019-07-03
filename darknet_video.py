@@ -10,7 +10,7 @@ set_session(tf.Session(config=config))
 
 model,optimizer = modelBuild()
 model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
-model.load_weights('saved_weights\\45k_data\\ADAM_0,0001_1000epochs_v3.h5')
+model.load_weights('saved_weights/Kernel_Scenario/2-Kernel3_4x4/Adam_Kernel3_4x4_0,0001_200epochs.h5')
 labels = {key:chr(key+55) for key in range(10,36)}
 network_path = '\\\\10.151.33.41\\Users\\Chastine\\anotherResources\\'
 #GLOBAL INIT
