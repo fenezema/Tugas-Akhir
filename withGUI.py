@@ -2,7 +2,7 @@
 from DoYOLO import *
 #IMPORT
 
-detections = YOLO()
+YOLO()
 
 class App:
     def __init__(self,title):
@@ -198,11 +198,23 @@ class VideoBackend:
         self.resize_width = resize_width
 
     def get_frame(self):
-        global detections
         self.ret, self.frame = self.vid.read()
-        self.frame_toShow = cv2.resize(self.frame,(self.resize_width,self.resize_height))
+        self.frame_toNetwork = self.frame.copy()
+
+        """"""
+        darknet_image = darknet.make_image(darknet.network_width(netMain),darknet.network_height(netMain),3)
+        frame_resized = cv2.resize(self.frame_toNetwork,
+                                    (darknet.network_width(netMain),
+                                        darknet.network_height(netMain)),
+                                    interpolation=cv2.INTER_LINEAR)
+        darknet.copy_image_from_bytes(darknet_image,frame_resized.tobytes())
+
+        detections = darknet.detect_image(netMain, metaMain, darknet_image, thresh=0.25)
+        """"""
         coor1, coor2, pojok_kiri_atas, pojok_kanan_bawah = calcRealPosition(detections,darknet.network_width(netMain),darknet.network_height(netMain))
-        cv2.rectangle(self.frame_toShow,coor1,coor2,(0,255,0),2)
+        cv2.rectangle(self.frame_toNetwork,coor1,coor2,(0,255,0),2)
+
+        self.frame_toShow = cv2.resize(self.frame_toNetwork,(self.resize_width,self.resize_height))
         if self.ret:
             return self.ret,self.frame,self.frame_toShow
         else:
