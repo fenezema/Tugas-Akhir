@@ -178,6 +178,8 @@ def YOLO():
         except Exception:
             pass
     print("Starting the YOLO loop...")
+    darknet_image = darknet.make_image(darknet.network_width(netMain),
+                                    darknet.network_height(netMain),3)
     # darknet_image = darknet.make_image(darknet.network_width(netMain),
     #                                 darknet.network_height(netMain),3)
     # frame_resized = cv2.resize(imgNew,
@@ -187,33 +189,32 @@ def YOLO():
     # darknet.copy_image_from_bytes(darknet_image,frame_resized.tobytes())
 
     # detections = darknet.detect_image(netMain, metaMain, darknet_image, thresh=0.25)
+    print("Hehe2")
+    return darknet_image
 
-    # return detections
-
-if __name__=="__main__":
-    img = cv2.imread('resources/GUIresources/saved_frames/test3-119.jpg')
-    toShow = img.copy()
-    imgNew = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    # Create an image we reuse for each detect
+# if __name__=="__main__":
+#     img = cv2.imread('resources/GUIresources/saved_frames/test3-119.jpg')
+#     toShow = img.copy()
+#     imgNew = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+#     # Create an image we reuse for each detect
     
-    # detections = YOLO(imgNew)
-    YOLO()
-    """"""
-    darknet_image = darknet.make_image(darknet.network_width(netMain),
-                                    darknet.network_height(netMain),3)
-    frame_resized = cv2.resize(imgNew,
-                                   (darknet.network_width(netMain),
-                                    darknet.network_height(netMain)),
-                                   interpolation=cv2.INTER_LINEAR)
-    darknet.copy_image_from_bytes(darknet_image,frame_resized.tobytes())
-
-    detections = darknet.detect_image(netMain, metaMain, darknet_image, thresh=0.25)
-    """"""
+#     # detections = YOLO(imgNew)
+#     darknet_image = YOLO()
+#     """"""
     
-    coor1, coor2, pojok_kiri_atas, pojok_kanan_bawah = calcRealPosition(detections,darknet.network_width(netMain),darknet.network_height(netMain))
+#     frame_resized = cv2.resize(imgNew,
+#                                    (darknet.network_width(netMain),
+#                                     darknet.network_height(netMain)),
+#                                    interpolation=cv2.INTER_LINEAR)
+#     darknet.copy_image_from_bytes(darknet_image,frame_resized.tobytes())
 
-    cv2.rectangle(toShow, coor1, coor2, (0, 255, 0), 2)
+#     detections = darknet.detect_image(netMain, metaMain, darknet_image, thresh=0.25)
+#     """"""
+    
+#     coor1, coor2, pojok_kiri_atas, pojok_kanan_bawah = calcRealPosition(detections,darknet.network_width(netMain),darknet.network_height(netMain))
 
-    cv2.imshow('res',toShow)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+#     cv2.rectangle(toShow, coor1, coor2, (0, 255, 0), 2)
+
+#     cv2.imshow('res',toShow)
+#     cv2.waitKey(0)
+#     cv2.destroyAllWindows()
