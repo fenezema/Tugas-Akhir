@@ -15,7 +15,7 @@ config.gpu_options.per_process_gpu_memory_fraction = 0.3
 set_session(tf.Session(config=config))
 model,optimizer = modelBuild()
 model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
-model.load_weights('saved_weights\\45k_data\\ADAM_0,0001_1000epochs_v3.h5')
+model.load_weights('saved_weights/Kernel_Scenario/2-Kernel3_4x4/Adam_Kernel3_4x4_0,0001_200epochs.h5')
 labels = {key:chr(key+55) for key in range(10,36)}
 #GLOBAL INIT
 
@@ -195,7 +195,7 @@ def main():
     old_frame_gray = None
     templates = []
 #    frames = cv2.VideoCapture("D:\\05111540000055_PBaskara\\src\\resources\\Datasets\\zzz-datatest\\test3.mov")
-    fvs = FileVideoStream('D:\\05111540000055_PBaskara\\src\\resources\\Datasets\\zzz-datatest\\test3.mov',queue_size=2048).start()
+    fvs = FileVideoStream('D:\\05111540000055_PBaskara\\src\\resources\\Datasets\\zzz-datatest\\test4.mov',queue_size=2048).start()
     pre = ValidationPreprocess()
 #    for i in range(0,11):
 #        templates.append(cv2.imread('resources/PositiveNew_v2/proc/imgRef/'+str(i)+'.jpg',0))
@@ -291,15 +291,16 @@ def main():
 #        cv2.imshow('frame',smaller)
         
         cv2.imshow('Matched Features', frame)
-#        if counter==115 or counter==164 or counter==242 or counter==339 or counter==474 or counter==593 or counter==633:
-#            cv2.imwrite("resources\\Test\\foregrounddd"+str(indeksnya)+"_frame.jpg",frame)
-#            cv2.imwrite("resources\\Test\\foregrounddd"+str(indeksnya)+"_currentBg.jpg",currentBg)
-#            cv2.imwrite("resources\\Test\\foregrounddd"+str(indeksnya)+".jpg",foreground)
-#            cv2.imwrite("resources\\Test\\foregrounddd"+str(indeksnya)+"_binary.jpg",binFg)
-#            cv2.imwrite("resources\\Test\\foregrounddd"+str(indeksnya)+"_binary_median.jpg",medianBlurredFg)
-#            cv2.imwrite("resources\\Test\\foregrounddd"+str(indeksnya)+"_binary_median_erode_dilate.jpg",morph)
-#            print(counter)
-#            indeksnya+=1
+        # if (counter>=324 and counter<=351) or (counter>=452 and counter<= 486) or (counter>=575 and counter<= 601) or (counter>=634 and counter <=650):
+        if (counter>=161 and counter<=177) or (counter>=715 and counter<= 733) or (counter>=1066 and counter<= 1082):
+           cv2.imwrite("resources/SIFTresources/"+str(counter)+".jpg",frame)
+        #    cv2.imwrite("resources\\Test\\foregrounddd"+str(indeksnya)+"_currentBg.jpg",currentBg)
+        #    cv2.imwrite("resources\\Test\\foregrounddd"+str(indeksnya)+".jpg",foreground)
+        #    cv2.imwrite("resources\\Test\\foregrounddd"+str(indeksnya)+"_binary.jpg",binFg)
+        #    cv2.imwrite("resources\\Test\\foregrounddd"+str(indeksnya)+"_binary_median.jpg",medianBlurredFg)
+        #    cv2.imwrite("resources\\Test\\foregrounddd"+str(indeksnya)+"_binary_median_erode_dilate.jpg",morph)
+        #    print(counter)
+        #    indeksnya+=1
         if cv2.waitKey(10) & 0xFF == ord('s'):
             cv2.imwrite("resources\\Test\\foregrounddd"+str(indeksnya)+"_frame.jpg",frame)
             cv2.imwrite("resources\\Test\\foregrounddd"+str(indeksnya)+"_currentBg.jpg",currentBg)
