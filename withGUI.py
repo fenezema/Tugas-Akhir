@@ -1,7 +1,8 @@
 #IMPORT
-from ValidationPreprocess import *
+from DoYOLO import *
 #IMPORT
 
+detections = YOLO()
 
 class App:
     def __init__(self,title):
@@ -197,8 +198,11 @@ class VideoBackend:
         self.resize_width = resize_width
 
     def get_frame(self):
+        global detections
         self.ret, self.frame = self.vid.read()
         self.frame_toShow = cv2.resize(self.frame,(self.resize_width,self.resize_height))
+        coor1, coor2, pojok_kiri_atas, pojok_kanan_bawah = calcRealPosition(detections,darknet.network_width(netMain),darknet.network_height(netMain))
+        cv2.rectangle(self.frame_toShow,coor1,coor2,(0,255,0),2)
         if self.ret:
             return self.ret,self.frame,self.frame_toShow
         else:
