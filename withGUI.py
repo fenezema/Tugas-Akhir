@@ -12,9 +12,13 @@ class App:
         self.photo_choosenFile = None
         self.allWidth = self.home.winfo_screenwidth()
         self.allHeight = self.home.winfo_screenheight() - 100
-        self.canvas_width = int(0.875*(self.allWidth/2))#500
+        self.allFrameWidth = int(0.875*(self.allWidth/2))
+        self.canvas_width = self.allFrameWidth#500
         self.canvas_scaling_coef = 1920/self.canvas_width
         self.canvas_height = int(1080/self.canvas_scaling_coef)#281 #int(1080/2.7429)#int(1080/self.canvas_scaling_coef)
+        self.topAreaFrameHeight = int(0.7*self.allHeight)
+        self.bottomAreaFrameHeight = int(0.3*self.allHeight)
+        self.areaFramePaddingWidth = int(0.125*(self.allWidth/2))
         self.vid = None
         self.filename = None
         self.update_flag = None
@@ -122,6 +126,7 @@ class App:
         self.statusSave['text'] = '-'
 
     def choose_file(self):
+        self.vid = None
         self.stopVideo()
         self.video_init = True
         self.vid = None
@@ -129,6 +134,7 @@ class App:
         the_vid = cv2.VideoCapture(self.filename)
         ret,frame = the_vid.read()
         frame_toShow = cv2.resize(frame,(self.canvas_width,self.canvas_height))
+        frame_toShow = cv2.cvtColor(frame_toShow, cv2.COLOR_BGR2RGB)
         self.photo_choosenFile = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame_toShow))
         self.canvas.create_image(0,0, image=self.photo_choosenFile,anchor = NW)
 
@@ -137,6 +143,7 @@ class App:
     def update(self,delay = 10):
         try:
             self.ret, self.frame, self.frame_toShow = self.vid.get_frame()
+            self.frame_toShow = cv2.cvtColor(self.frame_toShow, cv2.COLOR_BGR2RGB)
             if self.ret:
                 self.frame_counter+=1
                 self.frame_counter_toShow['text'] = self.frame_counter
@@ -149,35 +156,35 @@ class App:
             self.vid = None
 
     def putFrameTopLeft(self):
-        Frame(self.home,width=int(0.125*(self.allWidth/2)),height=int(0.7*self.allHeight)).grid(row=0,column=0)
-        self.frameTopLeft = Frame(self.home,width=int(0.875*(self.allWidth/2)),height=int(0.7*self.allHeight))
+        Frame(self.home,width=self.areaFramePaddingWidth,height=self.topAreaFrameHeight).grid(row=0,column=0)
+        self.frameTopLeft = Frame(self.home,width=self.allFrameWidth,height=self.topAreaFrameHeight)
         self.frameTopLeft.grid(row=0,column=1)
 
     def putFrameBotLeft(self):
-        Frame(self.home,width=int(0.125*(self.allWidth/2)),height=int(0.3*self.allHeight)).grid(row=0,column=0)
-        self.frameBotLeft = Frame(self.home,width=int(0.875*(self.allWidth/2)),height=int(0.3*self.allHeight))
+        Frame(self.home,width=self.areaFramePaddingWidth,height=self.bottomAreaFrameHeight).grid(row=0,column=0)
+        self.frameBotLeft = Frame(self.home,width=self.allFrameWidth,height=self.bottomAreaFrameHeight)
         self.frameBotLeft.grid(row=1,column=1)
 
-        self.frameBotLeftLeft = Frame(self.frameBotLeft,width=int(0.4142*( int(0.875*(self.allWidth/2)) )),height=int(0.3*self.allHeight))
+        self.frameBotLeftLeft = Frame(self.frameBotLeft,width=int(0.4142*( self.allFrameWidth )),height=self.bottomAreaFrameHeight)
         self.frameBotLeftLeft.grid(row=0,column=0)
 
-        Frame(self.frameBotLeft,width=int(0.0143*( int(0.875*(self.allWidth/2)) )),height=int(0.3*self.allHeight)).grid(row=0,column=1)
+        Frame(self.frameBotLeft,width=int(0.0143*( self.allFrameWidth )),height=self.bottomAreaFrameHeight).grid(row=0,column=1)
 
-        self.frameBotLeftMiddle = Frame(self.frameBotLeft,width=int(0.2714*( int(0.875*(self.allWidth/2)) )),height=int(0.3*self.allHeight))
+        self.frameBotLeftMiddle = Frame(self.frameBotLeft,width=int(0.2714*( self.allFrameWidth )),height=self.bottomAreaFrameHeight)
         self.frameBotLeftMiddle.grid(row=0,column=2)
 
-        Frame(self.frameBotLeft,width=int(0.0143*( int(0.875*(self.allWidth/2)) )),height=int(0.3*self.allHeight)).grid(row=0,column=3)
+        Frame(self.frameBotLeft,width=int(0.0143*( self.allFrameWidth )),height=self.bottomAreaFrameHeight).grid(row=0,column=3)
 
-        self.frameBotLeftRight = Frame(self.frameBotLeft,width=int(0.2857*( int(0.875*(self.allWidth/2)) )),height=int(0.3*self.allHeight))
+        self.frameBotLeftRight = Frame(self.frameBotLeft,width=int(0.2857*( self.allFrameWidth )),height=self.bottomAreaFrameHeight)
         self.frameBotLeftRight.grid(row=0,column=4)
 
     def putFrameTopRight(self):
-        self.frameTopRight = Frame(self.home,width=int(0.875*(self.allWidth/2)),height=int(0.7*self.allHeight))
+        self.frameTopRight = Frame(self.home,width=self.allFrameWidth,height=self.topAreaFrameHeight)
         self.frameTopRight.grid(row=0,column=2)
 
     def putFrameBotRight(self):
-        Frame(self.home,width=int(0.125*(self.allWidth/2)),height=int(0.3*self.allHeight)).grid(row=0,column=2)
-        self.frameBotRight = Frame(self.home,width=int(0.875*(self.allWidth/2)),height=int(0.3*self.allHeight))
+        Frame(self.home,width=self.areaFramePaddingWidth,height=self.bottomAreaFrameHeight).grid(row=0,column=2)
+        self.frameBotRight = Frame(self.home,width=self.allFrameWidth,height=self.bottomAreaFrameHeight)
         self.frameBotRight.grid(row=1,column=3)
 
 
