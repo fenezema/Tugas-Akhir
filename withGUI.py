@@ -43,8 +43,12 @@ class App:
         self.buttonChooseFile.pack()
         self.canvas = Canvas(self.frameTopLeft, width = self.canvas_width, height = self.canvas_height)
         self.canvas.pack()
-
         #put widgets on Top Left Frame
+
+        #put widgets on Top Right Frame
+        self.canvas1 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
+        self.canvas1.grid(row=0,column=0)
+        #put widgets on Top Right Frame
 
         #put widgets on Bottom Left Frame
         self.detected_label = Label(self.frameBotLeftLeft,text="Plat Nomor Terdeteksi : ")
@@ -62,7 +66,9 @@ class App:
         self.buttonPlay = Button(self.frameBotLeftMiddle,text="Play",width=8,height=3,font=self.helv,command=self.startVideo)
         self.buttonPlay.pack()
 
-        self.buttonStop = Button(self.frameBotLeftMiddle,text="Stop",command=self.stopVideo)
+        Frame(self.frameBotLeftMiddle,height=10).pack()
+
+        self.buttonStop = Button(self.frameBotLeftMiddle,text="Stop",width=8,height=3,command=self.stopVideo,font=self.helv)
         self.buttonStop.pack()
 
         self.buttonSave = Button(self.frameBotLeftRight,text="Save",width=8,height=3,font=self.helv,command=self.saveVideoFrame)
@@ -142,13 +148,21 @@ class App:
 
     def update(self,delay = 10):
         try:
-            self.ret, self.frame, self.frame_toShow = self.vid.get_frame()
+            self.ret, self.frame, self.frame_toShow,charas = self.vid.get_frame()
             self.frame_toShow = cv2.cvtColor(self.frame_toShow, cv2.COLOR_BGR2RGB)
             if self.ret:
                 self.frame_counter+=1
                 self.frame_counter_toShow['text'] = self.frame_counter
                 self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(self.frame_toShow))
                 self.canvas.create_image(0, 0, image = self.photo, anchor = NW)
+                roi_nya, roi_nya_flag = self.vid.getROI()
+                print("cinta")
+                if roi_nya_flag == True:
+                    print("cintaaa")
+                    photo1 = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(roi_nya))
+                    cv2.imwrite('resources/GUIresources/history/his.jpg',roi_nya)
+                    self.canvas1.create_image(0, 0, image = photo1, anchor = NW)
+                self.the_labels['text'] = charas
                 # if (self.frame_counter>=324 and self.frame_counter<=351) or (self.frame_counter>=452 and self.frame_counter<= 486) or (self.frame_counter>=575 and self.frame_counter<= 601) or (self.frame_counter>=634 and self.frame_counter <=650):
                 # if (self.frame_counter>=95 and self.frame_counter<=123):
                 if (self.frame_counter>=161 and self.frame_counter<=177) or (self.frame_counter>=715 and self.frame_counter<= 733) or (self.frame_counter>=1066 and self.frame_counter<= 1082):
@@ -190,8 +204,6 @@ class App:
         #     self.canvas_history.append(canvas1)
         # for element in self.canvas_history:
         #     element.grid(row=,column=)
-        # self.canvas1 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
-        # self.canvas1.grid(row=0,column=0)
 
         # self.canvas2 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
         # self.canvas2.grid(row=0,column=1)
@@ -230,23 +242,44 @@ class VideoBackend:
         self.height = self.vid.get(cv2.CAP_PROP_FRAME_HEIGHT)
         self.resize_height = resize_height
         self.resize_width = resize_width
-        # self.darknet_image = YOLO()
+        self.roiCandidate = None
+        self.roiFlag = False
 
     def get_frame(self):
         self.ret, self.frame = self.vid.read()
         self.frame_toNetwork = self.frame.copy()
+        self.charas = '-'
         
         coor1, coor2, pojok_kiri_atas, pojok_kanan_bawah = YOLO(self.frame_toNetwork)
+        print("yolo done")
         if coor1==0:
+            print("no detected roi")
+            self.roiFlag = False
             pass
         else:
+            self.roiFlag = True
+            # print("found roi candidate")
             cv2.rectangle(self.frame_toNetwork,coor1,coor2,(0,255,0),2)
-
+            self.roiCandidate = self.frame_toNetwork[pojok_kiri_atas[1]:pojok_kanan_bawah[1],pojok_kiri_atas[0]:pojok_kanan_bawah[0]]
+            # print("roi ready")
+            img_,eroded,the_charas,the_flag = segImg(self.roiCandidate,"")
+            # print("hehe")
+            if len(the_charas)==0:
+                # print("hehe if")
+                self.charas = '-'
+            else:
+                # print("hehe else")
+                self.charas = ''.join(the_charas)
+        # print("hehe ho")
         self.frame_toShow = cv2.resize(self.frame_toNetwork,(self.resize_width,self.resize_height))
+        # print("ehehe")
         if self.ret:
-            return self.ret,self.frame,self.frame_toShow
+            return self.ret,self.frame,self.frame_toShow,self.charas
         else:
-            return self.ret,None,None
+            return self.ret,None,None,self.charas
+    
+    def getROI(self):
+        return self.roiCandidate,self.roiFlag
 
     def __del__(self):
         self.vid.release()
