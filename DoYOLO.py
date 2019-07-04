@@ -36,9 +36,10 @@ def segImg(img,nm_fl):
     the_charas_candidate = {}
     the_charas = []
     try:
-        print('masuk try')
+        # print('masuk try')
         imge = img.copy()
     except:
+        # print("masuk except")
         return 0,0,0,False
     imggray = cv2.cvtColor(imge,cv2.COLOR_BGR2GRAY)
     h_imggray,w_imggray = imggray.shape
@@ -61,9 +62,9 @@ def segImg(img,nm_fl):
     for element in contours:
         x,y,w,h = cv2.boundingRect(element)
         if h>w and w/w_imggray > 0.04 and w/w_imggray <=0.15 and h/h_imggray >= 0.29 and h/h_imggray < 0.55:
-            print(h,h_imggray,h/h_imggray)
-            print(w,w_imggray,w/w_imggray)
-            print("masuk if")
+            # print(h,h_imggray,h/h_imggray)
+            # print(w,w_imggray,w/w_imggray)
+            # print("masuk if")
             the_charas_candidate[x]=[y,[w,h]]
 #            cv2.imwrite('coba/charas/'+nm_fl+'-'+str(cou)+'-'+str(h)+'-'+str(w)+'.jpg',img[y:y+h,x:x+w])
             cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
@@ -77,7 +78,7 @@ def segImg(img,nm_fl):
         charnya = getChara( imggray[y:y+h,x:x+w] )
         the_charas.append( charnya )
         cou+=1
-    print(the_charas)
+    # print(the_charas)
     return img,erode1,the_charas,True
 
 def convertBack(x, y, w, h):
