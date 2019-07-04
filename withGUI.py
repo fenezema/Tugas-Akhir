@@ -22,6 +22,7 @@ class App:
         self.filename = None
         self.update_flag = None
         self.frame_counter = 0
+        self.canvas_history = []
 
     def run(self):
         #inits apps
@@ -84,7 +85,7 @@ class App:
             self.update_flag = True
             self.vid = VideoBackend(self.filename,self.canvas_width,self.canvas_height)
             self.buttonPlay['text'] = 'Pause'
-            self.update(delay=80)
+            self.update(delay=10)
         elif self.update_flag == True:
             print('masuk elif true')
             self.pauseVideo()
@@ -93,7 +94,7 @@ class App:
             print('masuk elif false')
             self.resumeVideo()
             self.buttonPlay['text'] = 'Pause'
-            self.update(delay=80)
+            self.update(delay=10)
 
     def stopVideo(self):
         self.update_flag = False
@@ -180,6 +181,37 @@ class App:
     def putFrameTopRight(self):
         self.frameTopRight = Frame(self.home,width=self.allFrameWidth,height=self.topAreaFrameHeight)
         self.frameTopRight.grid(row=0,column=2)
+        # for i in range(9):
+        #     canvas1 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
+        #     self.canvas_history.append(canvas1)
+        # for element in self.canvas_history:
+        #     element.grid(row=,column=)
+        # self.canvas1 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
+        # self.canvas1.grid(row=0,column=0)
+
+        # self.canvas2 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
+        # self.canvas2.grid(row=0,column=1)
+
+        # self.canvas3 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
+        # self.canvas3.grid(row=0,column=2)
+
+        # self.canvas4 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
+        # self.canvas4.grid(row=1,column=0)
+
+        # self.canvas5 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
+        # self.canvas5.grid(row=1,column=1)
+
+        # self.canvas6 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
+        # self.canvas6.grid(row=1,column=2)
+
+        # self.canvas7 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
+        # self.canvas7.grid(row=2,column=0)
+
+        # self.canvas8 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
+        # self.canvas8.grid(row=2,column=1)
+
+        # self.canvas9 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
+        # self.canvas9.grid(row=2,column=2)
 
     def putFrameBotRight(self):
         Frame(self.home,width=self.areaFramePaddingWidth,height=self.bottomAreaFrameHeight).grid(row=0,column=2)
@@ -194,31 +226,17 @@ class VideoBackend:
         self.height = self.vid.get(cv2.CAP_PROP_FRAME_HEIGHT)
         self.resize_height = resize_height
         self.resize_width = resize_width
-        self.darknet_image = YOLO()
+        # self.darknet_image = YOLO()
 
     def get_frame(self):
         self.ret, self.frame = self.vid.read()
-        print(self.ret)
         self.frame_toNetwork = self.frame.copy()
-        print("Hehe")
-        hehe = cv2.cvtColor(self.frame_toNetwork,cv2.COLOR_BGR2RGB)
-        print("Hehe1")
-        # """"""
-
-        # frame_resized = cv2.resize(hehe,
-        #                             (darknet.network_width(netMain),
-        #                                 darknet.network_height(netMain)),
-        #                             interpolation=cv2.INTER_LINEAR)
-        # print("Hehe3")
-        # darknet.copy_image_from_bytes(self.darknet_image,frame_resized.tobytes())
-        # print("Hehe4")
-        # detections = darknet.detect_image(netMain, metaMain, darknet_image, thresh=0.25)
-        # print("Hehe5")
-        # """"""
-        # coor1, coor2, pojok_kiri_atas, pojok_kanan_bawah = calcRealPosition(detections,darknet.network_width(netMain),darknet.network_height(netMain))
-        # print("Hehe6")
-        # cv2.rectangle(self.frame_toNetwork,coor1,coor2,(0,255,0),2)
-        # print("Hehe7")
+        
+        coor1, coor2, pojok_kiri_atas, pojok_kanan_bawah = YOLO(self.frame_toNetwork)
+        if coor1==0:
+            pass
+        else:
+            cv2.rectangle(self.frame_toNetwork,coor1,coor2,(0,255,0),2)
 
         self.frame_toShow = cv2.resize(self.frame_toNetwork,(self.resize_width,self.resize_height))
         if self.ret:

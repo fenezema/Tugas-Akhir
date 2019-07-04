@@ -138,7 +138,9 @@ netMain = None
 metaMain = None
 altNames = None
 
-def YOLO():
+
+def YOLO(frame_read):
+
     global metaMain, netMain, altNames
     configPath = "./cfg/yolo-obj.cfg"
     weightPath = "backup/yolo-obj_2000.weights"
@@ -177,44 +179,37 @@ def YOLO():
                     pass
         except Exception:
             pass
+    #cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture("resources/Datasets/zzz-datatest/test4.MOV")
+    cap.set(3, 1280)
+    cap.set(4, 720)
+    out = cv2.VideoWriter(
+        "output.avi", cv2.VideoWriter_fourcc(*"MJPG"), 10.0,
+        (darknet.network_width(netMain), darknet.network_height(netMain)))
     print("Starting the YOLO loop...")
+
+    # Create an image we reuse for each detect
     darknet_image = darknet.make_image(darknet.network_width(netMain),
                                     darknet.network_height(netMain),3)
-    # darknet_image = darknet.make_image(darknet.network_width(netMain),
-    #                                 darknet.network_height(netMain),3)
-    # frame_resized = cv2.resize(imgNew,
-    #                                (darknet.network_width(netMain),
-    #                                 darknet.network_height(netMain)),
-    #                                interpolation=cv2.INTER_LINEAR)
-    # darknet.copy_image_from_bytes(darknet_image,frame_resized.tobytes())
-
-    # detections = darknet.detect_image(netMain, metaMain, darknet_image, thresh=0.25)
-    print("Hehe2")
-    return darknet_image
-
-# if __name__=="__main__":
-#     img = cv2.imread('resources/GUIresources/saved_frames/test3-119.jpg')
-#     toShow = img.copy()
-#     imgNew = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-#     # Create an image we reuse for each detect
     
-#     # detections = YOLO(imgNew)
-#     darknet_image = YOLO()
-#     """"""
-    
-#     frame_resized = cv2.resize(imgNew,
-#                                    (darknet.network_width(netMain),
-#                                     darknet.network_height(netMain)),
-#                                    interpolation=cv2.INTER_LINEAR)
-#     darknet.copy_image_from_bytes(darknet_image,frame_resized.tobytes())
+    frame_rgb = cv2.cvtColor(frame_read, cv2.COLOR_BGR2RGB)
+    frame_resized = cv2.resize(frame_rgb,
+                                (darknet.network_width(netMain),
+                                darknet.network_height(netMain)),
+                                interpolation=cv2.INTER_LINEAR)
 
-#     detections = darknet.detect_image(netMain, metaMain, darknet_image, thresh=0.25)
-#     """"""
-    
-#     coor1, coor2, pojok_kiri_atas, pojok_kanan_bawah = calcRealPosition(detections,darknet.network_width(netMain),darknet.network_height(netMain))
+    darknet.copy_image_from_bytes(darknet_image,frame_resized.tobytes())
 
-#     cv2.rectangle(toShow, coor1, coor2, (0, 255, 0), 2)
+    detections = darknet.detect_image(netMain, metaMain, darknet_image, thresh=0.25)
 
-#     cv2.imshow('res',toShow)
-#     cv2.waitKey(0)
-#     cv2.destroyAllWindows()
+    coor1, coor2, pojok_kiri_atas, pojok_kanan_bawah = calcRealPosition(detections,darknet.network_width(netMain),darknet.network_height(netMain))
+    return coor1, coor2, pojok_kiri_atas, pojok_kanan_bawah
+
+
+if __name__ == "__main__":
+    img = cv2.imread('resources/GUIresources/saved_frames/test3-119.jpg')
+    coor1, coor2, pojok_kiri_atas, pojok_kanan_bawah = YOLO(img)
+    cv2.rectangle(img,coor1,coor2,(0,255,0),2)
+    cv2.imshow('res',img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
