@@ -159,7 +159,8 @@ class App:
                 print("cinta")
                 if roi_nya_flag == True:
                     print("cintaaa")
-                    photo1 = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(roi_nya))
+                    roi_nya = cv2.cvtColor(roi_nya,cv2.COLOR_BGR2RGB)
+                    photo1 = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(roi_nya))                    
                     cv2.imwrite('resources/GUIresources/history/his.jpg',roi_nya)
                     self.canvas1.create_image(0, 0, image = photo1, anchor = NW)
                 self.the_labels['text'] = charas
@@ -248,13 +249,14 @@ class VideoBackend:
     def get_frame(self):
         self.ret, self.frame = self.vid.read()
         self.frame_toNetwork = self.frame.copy()
-        self.charas = '-'
+        self.charas = ''
         
         coor1, coor2, pojok_kiri_atas, pojok_kanan_bawah = YOLO(self.frame_toNetwork)
         print("yolo done")
         if coor1==0:
             print("no detected roi")
             self.roiFlag = False
+            self.charas = 'xx xxxx xx'
             pass
         else:
             self.roiFlag = True
@@ -266,10 +268,23 @@ class VideoBackend:
             # print("hehe")
             if len(the_charas)==0:
                 # print("hehe if")
-                self.charas = '-'
+                self.charas = 'xx xxxx xx'
             else:
                 # print("hehe else")
-                self.charas = ''.join(the_charas)
+                temp_charas = ''.join(the_charas)
+                temp = temp_charas.split('-')
+                for ind in range(len(temp)):
+                    if temp[ind] == '':
+                        if ind==1:
+                            self.charas+='xxxx '
+                        elif ind==2:
+                            self.charas+='xx'
+                        elif ind==0:
+                            self.charas+='xx '
+                    else:
+                        self.charas+=temp[ind]
+                        if ind!=2:
+                            self.charas+=' '
         # print("hehe ho")
         self.frame_toShow = cv2.resize(self.frame_toNetwork,(self.resize_width,self.resize_height))
         # print("ehehe")

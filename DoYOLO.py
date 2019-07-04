@@ -43,6 +43,7 @@ def segImg(img,nm_fl):
         return 0,0,0,False
     imggray = cv2.cvtColor(imge,cv2.COLOR_BGR2GRAY)
     h_imggray,w_imggray = imggray.shape
+    exp_width = int(0.2692*w_imggray)
     pre = ValidationPreprocess()
     imgBin = pre.imageToBinary(redefine={'flag':True,'img':imggray})
 
@@ -56,29 +57,35 @@ def segImg(img,nm_fl):
     # erode1 = cv2.erode(dilate,kernel,iterations = 2)
     # dilate1 = cv2.dilate(erode1,kernel,iterations = 1)
     # erode2 = cv2.erode(dilate1,kernel,iterations = 1)
-    img1, contours, hierarchy = cv2.findContours(erode1 ,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+    # img1, contours, hierarchy = cv2.findContours(erode1 ,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+    left_area, middle_area, right_area = erode1[:,:exp_width], erode1[:,(exp_width-1):(w_imggray-exp_width)], erode1[:,(w_imggray-exp_width):w_imggray]
+    the_areas = [left_area,middle_area,right_area]
     cou = 0
 
-    for element in contours:
-        x,y,w,h = cv2.boundingRect(element)
-        if h>w and w/w_imggray > 0.04 and w/w_imggray <=0.15 and h/h_imggray >= 0.29 and h/h_imggray < 0.55:
-            # print(h,h_imggray,h/h_imggray)
-            # print(w,w_imggray,w/w_imggray)
-            # print("masuk if")
-            the_charas_candidate[x]=[y,[w,h]]
-#            cv2.imwrite('coba/charas/'+nm_fl+'-'+str(cou)+'-'+str(h)+'-'+str(w)+'.jpg',img[y:y+h,x:x+w])
-            cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
-    
-    for ind in sorted(the_charas_candidate.keys()):
-        temp = the_charas_candidate[ind]
-        w,h = temp[1]
-        y = temp[0]
-        x = ind
-#        cv2.imwrite('coba/charas/'+nm_fl+'-'+str(cou)+'-'+str(h)+'-'+str(w)+'.jpg',imge[y:y+h,x:x+w])
-        charnya = getChara( imggray[y:y+h,x:x+w] )
-        the_charas.append( charnya )
-        cou+=1
-    # print(the_charas)
+    for hehe in the_areas:
+        the_charas_candidate = {}
+        img1, contours, hierarchy = cv2.findContours(hehe ,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+        for element in contours:
+            x,y,w,h = cv2.boundingRect(element)
+            if h>w and w/w_imggray > 0.04 and w/w_imggray <=0.15 and h/h_imggray >= 0.29 and h/h_imggray < 0.55:
+                # print(h,h_imggray,h/h_imggray)
+                # print(w,w_imggray,w/w_imggray)
+                # print("masuk if")
+                the_charas_candidate[x]=[y,[w,h]]
+    #            cv2.imwrite('coba/charas/'+nm_fl+'-'+str(cou)+'-'+str(h)+'-'+str(w)+'.jpg',img[y:y+h,x:x+w])
+                cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
+        
+        for ind in sorted(the_charas_candidate.keys()):
+            temp = the_charas_candidate[ind]
+            w,h = temp[1]
+            y = temp[0]
+            x = ind
+    #        cv2.imwrite('coba/charas/'+nm_fl+'-'+str(cou)+'-'+str(h)+'-'+str(w)+'.jpg',imge[y:y+h,x:x+w])
+            charnya = getChara( imggray[y:y+h,x:x+w] )
+            the_charas.append( charnya )
+            cou+=1
+        the_charas.append('-')
+    del the_charas[-1]
     return img,erode1,the_charas,True
 
 def convertBack(x, y, w, h):
