@@ -149,6 +149,10 @@ class App:
                 self.frame_counter_toShow['text'] = self.frame_counter
                 self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(self.frame_toShow))
                 self.canvas.create_image(0, 0, image = self.photo, anchor = NW)
+                # if (self.frame_counter>=324 and self.frame_counter<=351) or (self.frame_counter>=452 and self.frame_counter<= 486) or (self.frame_counter>=575 and self.frame_counter<= 601) or (self.frame_counter>=634 and self.frame_counter <=650):
+                # if (self.frame_counter>=95 and self.frame_counter<=123):
+                if (self.frame_counter>=161 and self.frame_counter<=177) or (self.frame_counter>=715 and self.frame_counter<= 733) or (self.frame_counter>=1066 and self.frame_counter<= 1082):
+                    cv2.imwrite("resources/GUIresources/saved/"+str(self.frame_counter)+".jpg",self.frame_toShow)
 
             if self.update_flag == True:
                 self.home.after(delay,self.update)
