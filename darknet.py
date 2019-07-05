@@ -291,7 +291,7 @@ netMain = None
 metaMain = None
 altNames = None
 
-def performDetect(imagePath="data/obj/632.jpg", thresh= 0.25, configPath = "./cfg/yolo-obj.cfg", weightPath = "backup/yolo-obj_2000.weights", metaPath= "./data/obj.data", showImage= True, makeImageOnly = False, initOnly= False):
+def performDetect(imagePath="data/obj/630.jpg", thresh= 0.25, configPath = "./cfg/yolo-obj.cfg", weightPath = "backup/yolo-obj_2000.weights", metaPath= "./data/obj.data", showImage= True, makeImageOnly = False, initOnly= False):
     """
     Convenience function to handle the detection and returns of objects.
 

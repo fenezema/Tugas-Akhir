@@ -166,8 +166,8 @@ class App:
                 self.the_labels['text'] = charas
                 # if (self.frame_counter>=324 and self.frame_counter<=351) or (self.frame_counter>=452 and self.frame_counter<= 486) or (self.frame_counter>=575 and self.frame_counter<= 601) or (self.frame_counter>=634 and self.frame_counter <=650):
                 # if (self.frame_counter>=95 and self.frame_counter<=123):
-                if (self.frame_counter>=161 and self.frame_counter<=177) or (self.frame_counter>=715 and self.frame_counter<= 733) or (self.frame_counter>=1066 and self.frame_counter<= 1082):
-                    cv2.imwrite("resources/GUIresources/saved/"+str(self.frame_counter)+".jpg",self.frame_toShow)
+                # if (self.frame_counter>=161 and self.frame_counter<=177) or (self.frame_counter>=715 and self.frame_counter<= 733) or (self.frame_counter>=1066 and self.frame_counter<= 1082):
+                #     cv2.imwrite("resources/GUIresources/saved/"+str(self.frame_counter)+".jpg",self.frame_toShow)
 
             if self.update_flag == True:
                 self.home.after(delay,self.update)
@@ -260,17 +260,15 @@ class VideoBackend:
             pass
         else:
             self.roiFlag = True
-            # print("found roi candidate")
+            
             cv2.rectangle(self.frame_toNetwork,coor1,coor2,(0,255,0),2)
             self.roiCandidate = self.frame_toNetwork[pojok_kiri_atas[1]:pojok_kanan_bawah[1],pojok_kiri_atas[0]:pojok_kanan_bawah[0]]
-            # print("roi ready")
+            
             img_,eroded,the_charas,the_flag = segImg(self.roiCandidate,"")
-            # print("hehe")
+            
             if len(the_charas)==0:
-                # print("hehe if")
                 self.charas = 'xx xxxx xx'
             else:
-                # print("hehe else")
                 temp_charas = ''.join(the_charas)
                 temp = temp_charas.split('-')
                 for ind in range(len(temp)):
@@ -285,9 +283,8 @@ class VideoBackend:
                         self.charas+=temp[ind]
                         if ind!=2:
                             self.charas+=' '
-        # print("hehe ho")
+        
         self.frame_toShow = cv2.resize(self.frame_toNetwork,(self.resize_width,self.resize_height))
-        # print("ehehe")
         if self.ret:
             return self.ret,self.frame,self.frame_toShow,self.charas
         else:

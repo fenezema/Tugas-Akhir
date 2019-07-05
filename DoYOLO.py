@@ -28,9 +28,9 @@ def getChara(img):
     pred = return_to_label(res)
     for element in pred:
         if element>9:
-            return labels[element]
+            return labels[element],imgBin
         else:
-            return str(element)
+            return str(element),imgBin
     
 def segImg(img,nm_fl):
     the_charas_candidate = {}
@@ -72,20 +72,21 @@ def segImg(img,nm_fl):
                 # print(w,w_imggray,w/w_imggray)
                 # print("masuk if")
                 the_charas_candidate[x]=[y,[w,h]]
-    #            cv2.imwrite('coba/charas/'+nm_fl+'-'+str(cou)+'-'+str(h)+'-'+str(w)+'.jpg',img[y:y+h,x:x+w])
-                cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
+                cv2.rectangle(hehe,(x,y),(x+w,y+h),255,2)
         
         for ind in sorted(the_charas_candidate.keys()):
             temp = the_charas_candidate[ind]
             w,h = temp[1]
             y = temp[0]
             x = ind
-    #        cv2.imwrite('coba/charas/'+nm_fl+'-'+str(cou)+'-'+str(h)+'-'+str(w)+'.jpg',imge[y:y+h,x:x+w])
-            charnya = getChara( imggray[y:y+h,x:x+w] )
+            charnya, resImgBin = getChara( imggray[y:y+h,x:x+w] )
+            cv2.imwrite('resources/GUIresources/saved/'+str(time.time())+'-'+charnya+'.jpg',resImgBin)
             the_charas.append( charnya )
             cou+=1
         the_charas.append('-')
     del the_charas[-1]
+    for elementt in the_areas:
+        cv2.imwrite('resources/GUIresources/saved/'+str(time.time())+'.jpg',elementt)
     return img,erode1,the_charas,True
 
 def convertBack(x, y, w, h):
