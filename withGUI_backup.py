@@ -1,5 +1,5 @@
 #IMPORT
-from DoYOLO import *
+from DoYOLO_backup import *
 #IMPORT
 
 class App:
@@ -46,8 +46,11 @@ class App:
         #put widgets on Top Left Frame
 
         #put widgets on Top Right Frame
+        Label(self.frameTopRight,text="ROI").pack()
         self.canvas1 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
-        self.canvas1.grid(row=0,column=0)
+        self.canvas1.pack()
+        # ohio = Button(self.frameTopRight,text="Choose File")
+        # ohio.pack()
         #put widgets on Top Right Frame
 
         #put widgets on Bottom Left Frame
@@ -57,7 +60,7 @@ class App:
         self.the_labels = Label(self.frameBotLeftLeft,text="-",font=self.helv)
         self.the_labels.pack()
 
-        self.frame_counter_toShow_label = Label(self.frameBotLeftLeft,text="Counter : ")
+        self.frame_counter_toShow_label = Label(self.frameBotLeftLeft,text="Frame : ")
         self.frame_counter_toShow_label.pack()
 
         self.frame_counter_toShow = Label(self.frameBotLeftLeft,text='-',font=self.helv)
@@ -198,8 +201,9 @@ class App:
         self.frameBotLeftRight.grid(row=0,column=4)
 
     def putFrameTopRight(self):
+        Frame(self.home,width=self.areaFramePaddingWidth,height=self.topAreaFrameHeight).grid(row=0,column=2)
         self.frameTopRight = Frame(self.home,width=self.allFrameWidth,height=self.topAreaFrameHeight)
-        self.frameTopRight.grid(row=0,column=2)
+        self.frameTopRight.grid(row=0,column=3)
         # for i in range(9):
         #     canvas1 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
         #     self.canvas_history.append(canvas1)

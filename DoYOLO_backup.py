@@ -64,9 +64,9 @@ def segImg(img,nm_fl):
     the_areas_ori = [left_area_ori, middle_area_ori, right_area_ori]
     cou = 0
 
-    for ind in range (len(the_areas)):
+    for indd in range (len(the_areas)):
         the_charas_candidate = {}
-        img1, contours, hierarchy = cv2.findContours(the_areas[ind] ,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+        img1, contours, hierarchy = cv2.findContours(the_areas[indd] ,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
         for element in contours:
             x,y,w,h = cv2.boundingRect(element)
             if h>w and w/w_imggray > 0.04 and w/w_imggray <=0.15 and h/h_imggray >= 0.29 and h/h_imggray < 0.55:
@@ -74,14 +74,14 @@ def segImg(img,nm_fl):
                 # print(w,w_imggray,w/w_imggray)
                 # print("masuk if")
                 the_charas_candidate[x]=[y,[w,h]]
-                cv2.rectangle(the_areas_ori[ind],(x,y),(x+w,y+h),255,2)
+                cv2.rectangle(the_areas_ori[indd],(x,y),(x+w,y+h),(0,2550,),2)
         
         for ind in sorted(the_charas_candidate.keys()):
             temp = the_charas_candidate[ind]
             w,h = temp[1]
             y = temp[0]
             x = ind
-            the_areas[ind] = hehe
+            hehe = the_areas[indd]
             charnya, resImgBin = getChara( hehe[y:y+h,x:x+w] )
             cv2.imwrite('resources/GUIresources/saved/'+str(time.time())+'-'+charnya+'.jpg',resImgBin)
             the_charas.append( charnya )

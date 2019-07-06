@@ -198,8 +198,9 @@ class App:
         self.frameBotLeftRight.grid(row=0,column=4)
 
     def putFrameTopRight(self):
+        Frame(self.home,width=self.areaFramePaddingWidth,height=self.topAreaFrameHeight).grid(row=0,column=2)
         self.frameTopRight = Frame(self.home,width=self.allFrameWidth,height=self.topAreaFrameHeight)
-        self.frameTopRight.grid(row=0,column=2)
+        self.frameTopRight.grid(row=0,column=3)
         # for i in range(9):
         #     canvas1 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
         #     self.canvas_history.append(canvas1)
