@@ -57,7 +57,7 @@ class App:
         self.the_labels = Label(self.frameBotLeftLeft,text="-",font=self.helv)
         self.the_labels.pack()
 
-        self.frame_counter_toShow_label = Label(self.frameBotLeftLeft,text="Frame : ")
+        self.frame_counter_toShow_label = Label(self.frameBotLeftLeft,text="Counter : ")
         self.frame_counter_toShow_label.pack()
 
         self.frame_counter_toShow = Label(self.frameBotLeftLeft,text='-',font=self.helv)
@@ -269,7 +269,20 @@ class VideoBackend:
             if len(the_charas)==0:
                 self.charas = 'xx xxxx xx'
             else:
-                self.charas = ''.join(the_charas)
+                temp_charas = ''.join(the_charas)
+                temp = temp_charas.split('-')
+                for ind in range(len(temp)):
+                    if temp[ind] == '':
+                        if ind==1:
+                            self.charas+='xxxx '
+                        elif ind==2:
+                            self.charas+='xx'
+                        elif ind==0:
+                            self.charas+='xx '
+                    else:
+                        self.charas+=temp[ind]
+                        if ind!=2:
+                            self.charas+=' '
         
         self.frame_toShow = cv2.resize(self.frame_toNetwork,(self.resize_width,self.resize_height))
         if self.ret:
