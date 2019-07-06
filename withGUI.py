@@ -201,35 +201,6 @@ class App:
         Frame(self.home,width=self.areaFramePaddingWidth,height=self.topAreaFrameHeight).grid(row=0,column=2)
         self.frameTopRight = Frame(self.home,width=self.allFrameWidth,height=self.topAreaFrameHeight)
         self.frameTopRight.grid(row=0,column=3)
-        # for i in range(9):
-        #     canvas1 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
-        #     self.canvas_history.append(canvas1)
-        # for element in self.canvas_history:
-        #     element.grid(row=,column=)
-
-        # self.canvas2 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
-        # self.canvas2.grid(row=0,column=1)
-
-        # self.canvas3 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
-        # self.canvas3.grid(row=0,column=2)
-
-        # self.canvas4 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
-        # self.canvas4.grid(row=1,column=0)
-
-        # self.canvas5 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
-        # self.canvas5.grid(row=1,column=1)
-
-        # self.canvas6 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
-        # self.canvas6.grid(row=1,column=2)
-
-        # self.canvas7 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
-        # self.canvas7.grid(row=2,column=0)
-
-        # self.canvas8 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
-        # self.canvas8.grid(row=2,column=1)
-
-        # self.canvas9 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
-        # self.canvas9.grid(row=2,column=2)
 
     def putFrameBotRight(self):
         Frame(self.home,width=self.areaFramePaddingWidth,height=self.bottomAreaFrameHeight).grid(row=0,column=2)

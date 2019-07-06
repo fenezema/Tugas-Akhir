@@ -7,6 +7,7 @@ class App:
         self.home = Tk()
         self.title = title
         self.canvas = None
+        self.canvas1 = None
         self.photo = None
         self.photo_choosenFile = None
         self.allWidth = self.home.winfo_screenwidth()
@@ -46,11 +47,11 @@ class App:
         #put widgets on Top Left Frame
 
         #put widgets on Top Right Frame
-        Label(self.frameTopRight,text="ROI").pack()
+        Label(self.frameTopRight,text="ROI").grid(row=0,column=0)
         self.canvas1 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
-        self.canvas1.pack()
-        # ohio = Button(self.frameTopRight,text="Choose File")
-        # ohio.pack()
+        self.canvas1.grid(row=0,column=1)
+        ohio = Button(self.frameTopRight,text="Choose File")
+        ohio.grid(row=0,column=2)
         #put widgets on Top Right Frame
 
         #put widgets on Bottom Left Frame
@@ -183,7 +184,7 @@ class App:
         self.frameTopLeft.grid(row=0,column=1)
 
     def putFrameBotLeft(self):
-        Frame(self.home,width=self.areaFramePaddingWidth,height=self.bottomAreaFrameHeight).grid(row=0,column=0)
+        Frame(self.home,width=self.areaFramePaddingWidth,height=self.bottomAreaFrameHeight).grid(row=1,column=0)
         self.frameBotLeft = Frame(self.home,width=self.allFrameWidth,height=self.bottomAreaFrameHeight)
         self.frameBotLeft.grid(row=1,column=1)
 
@@ -201,42 +202,13 @@ class App:
         self.frameBotLeftRight.grid(row=0,column=4)
 
     def putFrameTopRight(self):
-        Frame(self.home,width=self.areaFramePaddingWidth,height=self.topAreaFrameHeight).grid(row=0,column=2)
-        self.frameTopRight = Frame(self.home,width=self.allFrameWidth,height=self.topAreaFrameHeight)
+        Frame(self.home,width=self.areaFramePaddingWidth,height=self.topAreaFrameHeight,bg='yellow').grid(row=0,column=2)
+        self.frameTopRight = Frame(self.home,width=self.allFrameWidth,height=self.topAreaFrameHeight,bg='green')
         self.frameTopRight.grid(row=0,column=3)
-        # for i in range(9):
-        #     canvas1 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
-        #     self.canvas_history.append(canvas1)
-        # for element in self.canvas_history:
-        #     element.grid(row=,column=)
-
-        # self.canvas2 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
-        # self.canvas2.grid(row=0,column=1)
-
-        # self.canvas3 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
-        # self.canvas3.grid(row=0,column=2)
-
-        # self.canvas4 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
-        # self.canvas4.grid(row=1,column=0)
-
-        # self.canvas5 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
-        # self.canvas5.grid(row=1,column=1)
-
-        # self.canvas6 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
-        # self.canvas6.grid(row=1,column=2)
-
-        # self.canvas7 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
-        # self.canvas7.grid(row=2,column=0)
-
-        # self.canvas8 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
-        # self.canvas8.grid(row=2,column=1)
-
-        # self.canvas9 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
-        # self.canvas9.grid(row=2,column=2)
 
     def putFrameBotRight(self):
-        Frame(self.home,width=self.areaFramePaddingWidth,height=self.bottomAreaFrameHeight).grid(row=0,column=2)
-        self.frameBotRight = Frame(self.home,width=self.allFrameWidth,height=self.bottomAreaFrameHeight)
+        Frame(self.home,width=self.areaFramePaddingWidth,height=self.bottomAreaFrameHeight,bg='red').grid(row=1,column=2)
+        self.frameBotRight = Frame(self.home,width=self.allFrameWidth,height=self.bottomAreaFrameHeight,bg='blue')
         self.frameBotRight.grid(row=1,column=3)
 
 
