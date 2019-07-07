@@ -60,8 +60,10 @@ def segImg(img,nm_fl):
     # img1, contours, hierarchy = cv2.findContours(erode1 ,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
     left_area, middle_area, right_area = erode1[:,:exp_width], erode1[:,(exp_width-1):(w_imggray-exp_width)], erode1[:,(w_imggray-exp_width):w_imggray]
     left_area_ori, middle_area_ori, right_area_ori = img[:,:exp_width], img[:,(exp_width-1):(w_imggray-exp_width)], img[:,(w_imggray-exp_width):w_imggray]
+    left_area_gray, middle_area_gray, right_area_gray = imgBin[:,:exp_width], imgBin[:,(exp_width-1):(w_imggray-exp_width)], imgBin[:,(w_imggray-exp_width):w_imggray]
     the_areas = [left_area,middle_area,right_area]
     the_areas_ori = [left_area_ori, middle_area_ori, right_area_ori]
+    the_areas_gray = [left_area_gray, middle_area_gray, right_area_gray]
     cou = 0
 
     for indd in range (len(the_areas)):
@@ -81,7 +83,7 @@ def segImg(img,nm_fl):
             w,h = temp[1]
             y = temp[0]
             x = ind
-            hehe = the_areas[indd]
+            hehe = the_areas_gray[indd]
             charnya, resImgBin = getChara( hehe[y:y+h,x:x+w] )
             cv2.imwrite('resources/GUIresources/saved/'+str(time.time())+'-'+charnya+'.jpg',resImgBin)
             the_charas.append( charnya )
