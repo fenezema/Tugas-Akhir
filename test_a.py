@@ -190,12 +190,13 @@ def flannBased(bgr,gray,templates,nm_fl):
 #        #return None,None
 
 def main():
+    count_found = 0
     isTracked = False
     p0 = None
     old_frame_gray = None
     templates = []
 #    frames = cv2.VideoCapture("D:\\05111540000055_PBaskara\\src\\resources\\Datasets\\zzz-datatest\\test3.mov")
-    fvs = FileVideoStream('D:\\05111540000055_PBaskara\\src\\resources\\Datasets\\zzz-datatest\\test4.mov',queue_size=2048).start()
+    fvs = FileVideoStream('D:\\05111540000055_PBaskara\\src\\resources\\Datasets\\zzz-datatest\\test8_f_forBuku1.mp4',queue_size=2048).start()
     pre = ValidationPreprocess()
 #    for i in range(0,11):
 #        templates.append(cv2.imread('resources/PositiveNew_v2/proc/imgRef/'+str(i)+'.jpg',0))
@@ -254,10 +255,12 @@ def main():
                 y_real = y_lokasi +int(row/4)
                 p0 = np.array([[[x_real,y_real]],[[x_real + w_real,y_real]],[[x_real,y_real + h_real]],[[x_real + w_real,y_real + h_real]]],dtype="float32")
                 old_frame_gray = grayy
+                count_found+=1
             else:
                 isTracked = False
 #                print(resss['data'])
         elif isTracked == True:
+            count_found+=1
 #            print(isTracked)
             frame_gray = grayy
             p1, st, err = cv2.calcOpticalFlowPyrLK(old_frame_gray, frame_gray, p0, None, **lk_params)
@@ -292,6 +295,7 @@ def main():
         
         cv2.imshow('Matched Features', frame)
         # if (counter>=324 and counter<=351) or (counter>=452 and counter<= 486) or (counter>=575 and counter<= 601) or (counter>=634 and counter <=650):
+        """
         if (counter>=161 and counter<=177) or (counter>=715 and counter<= 733) or (counter>=1066 and counter<= 1082):
            cv2.imwrite("resources/SIFTresources/"+str(counter)+".jpg",frame)
         #    cv2.imwrite("resources\\Test\\foregrounddd"+str(indeksnya)+"_currentBg.jpg",currentBg)
@@ -301,15 +305,10 @@ def main():
         #    cv2.imwrite("resources\\Test\\foregrounddd"+str(indeksnya)+"_binary_median_erode_dilate.jpg",morph)
         #    print(counter)
         #    indeksnya+=1
-        if cv2.waitKey(10) & 0xFF == ord('s'):
-            cv2.imwrite("resources\\Test\\foregrounddd"+str(indeksnya)+"_frame.jpg",frame)
-            cv2.imwrite("resources\\Test\\foregrounddd"+str(indeksnya)+"_currentBg.jpg",currentBg)
-            cv2.imwrite("resources\\Test\\foregrounddd"+str(indeksnya)+".jpg",foreground)
-            cv2.imwrite("resources\\Test\\foregrounddd"+str(indeksnya)+"_binary.jpg",binFg)
-            cv2.imwrite("resources\\Test\\foregrounddd"+str(indeksnya)+"_binary_median.jpg",medianBlurredFg)
-            cv2.imwrite("resources\\Test\\foregrounddd"+str(indeksnya)+"_binary_median_erode_dilate.jpg",morph)
-            print(counter)
-            indeksnya+=1
+        """
+        if counter==50:
+            print(count_found)
+            break
         elif cv2.waitKey(10) & 0xFF == ord('q'):#counter==7978:
 #            cv2.imwrite("resources\\Test\\foreground10_frame.jpg",frame)
 #            cv2.imwrite("resources\\Test\\foreground10_currentBg.jpg",currentBg)
