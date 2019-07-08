@@ -65,7 +65,13 @@ def segImg(img,nm_fl):
     the_areas_ori = [left_area_ori, middle_area_ori, right_area_ori]
     the_areas_gray = [left_area_gray, middle_area_gray, right_area_gray]
     cou = 0
-
+    # for area_elem_ind in range (len(the_areas)):
+    #     if area_elem_ind == 0:
+    #         cv2.imwrite('resources/GUIresources/saved/'+str(time.time())+'-0left'+'.jpg',the_areas[area_elem_ind])
+    #     elif area_elem_ind == 1:
+    #         cv2.imwrite('resources/GUIresources/saved/'+str(time.time())+'-1middle'+'.jpg',the_areas[area_elem_ind])
+    #     else:
+    #         cv2.imwrite('resources/GUIresources/saved/'+str(time.time())+'-2right'+'.jpg',the_areas[area_elem_ind])
     for indd in range (len(the_areas)):
         the_charas_candidate = {}
         img1, contours, hierarchy = cv2.findContours(the_areas[indd] ,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
@@ -155,7 +161,7 @@ def YOLO(frame_read):
 
     global metaMain, netMain, altNames
     configPath = "./cfg/yolo-obj.cfg"
-    weightPath = "backup/yolo-obj_2000.weights"
+    weightPath = "backup/yolo-obj_last.weights"
     metaPath = "./data/obj.data"
     if not os.path.exists(configPath):
         raise ValueError("Invalid config path `" +

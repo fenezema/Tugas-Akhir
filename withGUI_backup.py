@@ -2,6 +2,10 @@
 from DoYOLO_backup import *
 #IMPORT
 
+#global declare
+falseCounter = 0
+#global declare
+
 class App:
     def __init__(self,title):
         self.home = Tk()
@@ -67,6 +71,12 @@ class App:
         self.frame_counter_toShow = Label(self.frameBotLeftLeft,text='-',font=self.helv)
         self.frame_counter_toShow.pack()
 
+        self.false_counter_label = Label(self.frameBotLeftLeft, text='False Counter : ')
+        self.false_counter_label.pack()
+
+        self.false_counter_label_toShow = Label(self.frameBotLeftLeft, text='-')
+        self.false_counter_label_toShow.pack()
+
         self.buttonPlay = Button(self.frameBotLeftMiddle,text="Play",width=8,height=3,font=self.helv,command=self.startVideo)
         self.buttonPlay.pack()
 
@@ -107,6 +117,8 @@ class App:
             self.update(delay=10)
 
     def stopVideo(self):
+        global falseCounter
+        falseCounter = 0
         self.update_flag = False
         self.video_init = True
         self.buttonPlay['text'] = 'Play'
@@ -151,8 +163,10 @@ class App:
         print(self.filename)
 
     def update(self,delay = 10):
+        global falseCounter
         try:
             self.ret, self.frame, self.frame_toShow,charas = self.vid.get_frame()
+            self.false_counter_label_toShow['text'] = falseCounter
             self.frame_toShow = cv2.cvtColor(self.frame_toShow, cv2.COLOR_BGR2RGB)
             if self.ret:
                 self.frame_counter+=1
@@ -223,6 +237,7 @@ class VideoBackend:
         self.roiFlag = False
 
     def get_frame(self):
+        global falseCounter
         self.ret, self.frame = self.vid.read()
         self.frame_toNetwork = self.frame.copy()
         self.charas = ''
@@ -231,6 +246,7 @@ class VideoBackend:
         print("yolo done")
         if coor1==0:
             print("no detected roi")
+            falseCounter += 1
             self.roiFlag = False
             self.charas = 'xx xxxx xx'
             pass
