@@ -54,8 +54,8 @@ class App:
         Label(self.frameTopRight,text="ROI").grid(row=0,column=0)
         self.canvas1 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
         self.canvas1.grid(row=0,column=1)
-        ohio = Button(self.frameTopRight,text="Choose File")
-        ohio.grid(row=0,column=2)
+        # ohio = Button(self.frameTopRight,text="Choose File")
+        # ohio.grid(row=0,column=2)
         #put widgets on Top Right Frame
 
         #put widgets on Bottom Left Frame
@@ -216,13 +216,13 @@ class App:
         self.frameBotLeftRight.grid(row=0,column=4)
 
     def putFrameTopRight(self):
-        Frame(self.home,width=self.areaFramePaddingWidth,height=self.topAreaFrameHeight,bg='yellow').grid(row=0,column=2)
-        self.frameTopRight = Frame(self.home,width=self.allFrameWidth,height=self.topAreaFrameHeight,bg='green')
+        Frame(self.home,width=self.areaFramePaddingWidth,height=self.topAreaFrameHeight).grid(row=0,column=2)
+        self.frameTopRight = Frame(self.home,width=self.allFrameWidth,height=self.topAreaFrameHeight)
         self.frameTopRight.grid(row=0,column=3)
 
     def putFrameBotRight(self):
-        Frame(self.home,width=self.areaFramePaddingWidth,height=self.bottomAreaFrameHeight,bg='red').grid(row=1,column=2)
-        self.frameBotRight = Frame(self.home,width=self.allFrameWidth,height=self.bottomAreaFrameHeight,bg='blue')
+        Frame(self.home,width=self.areaFramePaddingWidth,height=self.bottomAreaFrameHeight).grid(row=1,column=2)
+        self.frameBotRight = Frame(self.home,width=self.allFrameWidth,height=self.bottomAreaFrameHeight)
         self.frameBotRight.grid(row=1,column=3)
 
 
