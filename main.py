@@ -19,7 +19,7 @@ def doPreprocessing(img,dir_path,toggle_flag):
         for element in dir_list:
             if len(element)==1:
                 img.setCurrentPath(element)
-                img.augmentImages(img.getCurrentPath(),False)
+                img.augmentImages(img.getCurrentPath(),True)
                 saved_in_path = img.directory_path_processed+element
                 file_list = os.listdir(img.getCurrentPath())
                 print(file_list)
@@ -35,7 +35,7 @@ def doPreprocessing(img,dir_path,toggle_flag):
                     except:    
                         os.chdir(saved_in_path)
                         img.toBinary(resizeImg=True,sizeImg=32)
-                    os.chdir("D:\\05111540000055_PBaskara\\src")
+                    os.chdir("D:/05111540000055_PBaskara/src")
     elif toggle_flag == False:
         print("Preprocessing Data process skipped")
 
@@ -66,12 +66,14 @@ def doMakeModel(train_x,train_y,test_x,test_y,toggle=False, kFolds_checker=False
             model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
             print(model.summary())
             time_callback = TimeHistory()
-            history = model.fit(train_x, train_y, batch_size=50, epochs=200, verbose=1, callbacks=[time_callback], validation_data=(test_x, test_y))
+            filepath_nya = './saved_weights/checkpoint/Adam_0,0001_50epoch_{epoch:02d}.hdf5'
+            checkpoint = ModelCheckpoint(filepath_nya, monitor='val_loss',verbose=1,save_best_only=False,save_weights_only=True,mode='auto',period=2)
+            history = model.fit(train_x, train_y, batch_size=50, epochs=50, verbose=1, callbacks=[time_callback,checkpoint], validation_data=(test_x, test_y))
             
             print("Time:")
             print(sum(time_callback.times))
             
-            scenario_name = 'Adam_Kernel3_4x4_0,0001_200epochs'
+            scenario_name = 'saved_weights/recent/Adam_0,0001_50epochs'
             evaluate_model(model, scenario_name, test_x, test_y)
             print_plot(history, scenario_name)
             
@@ -100,8 +102,8 @@ def main():
             toggle_nya = True
         elif args[toggle_ind] == 'False':
             toggle_nya = False
-    dataset_path = "resources/Datasets/" # "F:\\Kuliah\\Tugas Akhir\\05111540000055_PBaskara\\src\\resources\\Datasets\\"
-    saved_path = "resources/Processed/" #D:\05111540000055_PBaskara\src "F:\\Kuliah\\Tugas Akhir\\05111540000055_PBaskara\\src\\resources\\Processed\\"
+    dataset_path = "D:/05111540000055_PBaskara/src/resources/Datasets/" # "F:\\Kuliah\\Tugas Akhir\\05111540000055_PBaskara\\src\\resources\\Datasets\\"
+    saved_path = "D:/05111540000055_PBaskara/src/resources/Processed/" #D:\05111540000055_PBaskara\src "F:\\Kuliah\\Tugas Akhir\\05111540000055_PBaskara\\src\\resources\\Processed\\"
     resources_path = "resources/" #D:\05111540000055_PBaskara\src
     
     img = ImagePreprocessing(dataset_path,saved_path) #ends directory name with \\(Windows) or /(UNIX)

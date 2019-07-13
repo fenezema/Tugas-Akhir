@@ -68,7 +68,7 @@ class ImagePreprocessing:
                 i = 0
                 for batch in self.datagen.flow(self.data, batch_size=1, save_to_dir=path, save_prefix=prefix, save_format='jpg'):
                     i += 1
-                    if i > 10:
+                    if i > 20:
                         break
         elif flag==False:
             print("Data Augment has been skipped")

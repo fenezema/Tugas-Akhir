@@ -40,6 +40,7 @@ from keras.models import Model
 from keras.layers import Input, Activation, Dense, Conv2D, MaxPooling2D, Flatten, Dropout, BatchNormalization, LeakyReLU
 from keras.optimizers import Adam, Adagrad, SGD, RMSprop
 from keras.utils.np_utils import to_categorical
+from keras.callbacks import ModelCheckpoint
 from sklearn.metrics import classification_report
 from sklearn.model_selection import StratifiedKFold
 
