@@ -30,6 +30,7 @@ import tensorflow as tf
 import PIL.Image, PIL.ImageTk
 import tkinter.font as font
 import tkinter.filedialog
+from collections import Counter
 from tkinter import *
 from ctypes import *
 from multiprocessing import Process
