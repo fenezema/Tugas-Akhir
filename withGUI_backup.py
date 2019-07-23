@@ -28,6 +28,7 @@ class App:
         self.update_flag = None
         self.frame_counter = 0
         self.canvas_history = []
+        self.platesPred = []
 
     def run(self):
         #inits apps
@@ -53,13 +54,13 @@ class App:
         #put widgets on Top Right Frame
         Label(self.frameTopRight,text="ROI").grid(row=0,column=0)
         self.canvas1 = Canvas(self.frameTopRight, width = int(self.canvas_width/3), height = int(self.canvas_height/3))
-        self.canvas1.grid(row=0,column=1)
+        self.canvas1.grid(row=1,column=0)
         # ohio = Button(self.frameTopRight,text="Choose File")
         # ohio.grid(row=0,column=2)
         #put widgets on Top Right Frame
 
         #put widgets on Bottom Left Frame
-        self.detected_label = Label(self.frameBotLeftLeft,text="Plat Nomor Terdeteksi : ")
+        self.detected_label = Label(self.frameBotLeftLeft,text="Plat Nomor : ")
         self.detected_label.pack()
 
         self.the_labels = Label(self.frameBotLeftLeft,text="-",font=self.helv)
@@ -76,6 +77,12 @@ class App:
 
         self.false_counter_label_toShow = Label(self.frameBotLeftLeft, text='-')
         self.false_counter_label_toShow.pack()
+
+        self.conclusionPlate = Label(self.frameBotLeftLeft,text="Plat Nomor Terdeteksi : ")
+        self.conclusionPlate.pack()
+
+        self.concludeLabel = Label(self.frameBotLeftLeft,text="-",font=self.helv)
+        self.concludeLabel.pack()
 
         self.buttonPlay = Button(self.frameBotLeftMiddle,text="Play",width=8,height=3,font=self.helv,command=self.startVideo)
         self.buttonPlay.pack()
@@ -119,6 +126,7 @@ class App:
     def stopVideo(self):
         global falseCounter
         falseCounter = 0
+        self.platesPred = []
         self.update_flag = False
         self.video_init = True
         self.buttonPlay['text'] = 'Play'
@@ -152,15 +160,29 @@ class App:
         self.stopVideo()
         self.video_init = True
         self.vid = None
-        self.filename = filedialog.askopenfilename(initialdir="./resources",title="Select File",filetypes=(("video files","*.MOV"),("all files","*")))
+        self.filename = filedialog.askopenfilename(initialdir="./resources/Datasets/zzz-datatest",title="Select File",filetypes=(("video files","*.MOV"),("all files","*")))
         the_vid = cv2.VideoCapture(self.filename)
         ret,frame = the_vid.read()
         frame_toShow = cv2.resize(frame,(self.canvas_width,self.canvas_height))
         frame_toShow = cv2.cvtColor(frame_toShow, cv2.COLOR_BGR2RGB)
         self.photo_choosenFile = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame_toShow))
         self.canvas.create_image(0,0, image=self.photo_choosenFile,anchor = NW)
+        roix = cv2.imread('resources/GUIresources/history/his.jpg')
+        roix = cv2.resize(roix,(int(self.canvas_width/3),int(self.canvas_height/3)))
+        self.photo_choosenFile1 = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(roix))
+        self.canvas1.create_image(0,0, image=self.photo_choosenFile1,anchor = NW)
 
         print(self.filename)
+
+    def getPlatesResult(self):
+        try:
+            platesPred = Counter(self.platesPred)
+            sorted_plates = sorted(platesPred.items(),key=operator.itemgetter(1),reverse=True)
+            mostVote = sorted_plates[0]
+            mostVote_plate = mostVote[0]
+            return mostVote_plate
+        except:
+            return "xx xxxx xx"
 
     def update(self,delay = 10):
         global falseCounter
@@ -174,14 +196,23 @@ class App:
                 self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(self.frame_toShow))
                 self.canvas.create_image(0, 0, image = self.photo, anchor = NW)
                 roi_nya, roi_nya_flag = self.vid.getROI()
+                # print(roi_nya.shape)
                 print("cinta")
                 if roi_nya_flag == True:
                     print("cintaaa")
                     roi_nya = cv2.cvtColor(roi_nya,cv2.COLOR_BGR2RGB)
-                    photo1 = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(roi_nya))                    
+                    roi_nya = cv2.resize(roi_nya,(int(self.canvas_width/3),int(self.canvas_height/3)))
+                    print("cintahehe2")
+                    self.photo1 = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(roi_nya))
+                    print("cintahehe1")
                     cv2.imwrite('resources/GUIresources/history/his.jpg',roi_nya)
-                    self.canvas1.create_image(0, 0, image = photo1, anchor = NW)
+                    print("cintahehe")
+                    self.canvas1.create_image(0, 0, image = self.photo1,anchor = NW)
                 self.the_labels['text'] = charas
+                if 'x' not in charas:
+                    self.platesPred.append(charas)
+                self.concludeLabel['text'] = self.getPlatesResult()
+                print("cintaku")
                 # if (self.frame_counter>=324 and self.frame_counter<=351) or (self.frame_counter>=452 and self.frame_counter<= 486) or (self.frame_counter>=575 and self.frame_counter<= 601) or (self.frame_counter>=634 and self.frame_counter <=650):
                 # if (self.frame_counter>=95 and self.frame_counter<=123):
                 # if (self.frame_counter>=161 and self.frame_counter<=177) or (self.frame_counter>=715 and self.frame_counter<= 733) or (self.frame_counter>=1066 and self.frame_counter<= 1082):
@@ -239,6 +270,7 @@ class VideoBackend:
     def get_frame(self):
         global falseCounter
         self.ret, self.frame = self.vid.read()
+        cv2.rectangle(self.frame,(int(1920/3),int(1080/3)),(int(1920/3*2),int(1080/3*2.6)),(255,0,0),10)
         self.frame_toNetwork = self.frame.copy()
         self.charas = ''
         
@@ -255,26 +287,28 @@ class VideoBackend:
             
             cv2.rectangle(self.frame_toNetwork,coor1,coor2,(0,255,0),2)
             self.roiCandidate = self.frame_toNetwork[pojok_kiri_atas[1]:pojok_kanan_bawah[1],pojok_kiri_atas[0]:pojok_kanan_bawah[0]]
-            
-            img_,eroded,the_charas,the_flag = segImg(self.roiCandidate,"")
-            
-            if len(the_charas)==0:
-                self.charas = 'xx xxxx xx'
+            if pojok_kiri_atas[1]>=1080/3 and pojok_kanan_bawah[1]<1080/3*2.6 and pojok_kiri_atas[0]>=1920/3 and pojok_kanan_bawah[0]<1920/3*2:   
+                img_,eroded,the_charas,the_flag = segImg(self.roiCandidate,"")
+                
+                if len(the_charas)==0:
+                    self.charas = 'xx xxxx xx'
+                else:
+                    temp_charas = ''.join(the_charas)
+                    temp = temp_charas.split('-')
+                    for ind in range(len(temp)):
+                        if temp[ind] == '':
+                            if ind==1:
+                                self.charas+='xxxx '
+                            elif ind==2:
+                                self.charas+='xx'
+                            elif ind==0:
+                                self.charas+='xx '
+                        else:
+                            self.charas+=temp[ind]
+                            if ind!=2:
+                                self.charas+=' '
             else:
-                temp_charas = ''.join(the_charas)
-                temp = temp_charas.split('-')
-                for ind in range(len(temp)):
-                    if temp[ind] == '':
-                        if ind==1:
-                            self.charas+='xxxx '
-                        elif ind==2:
-                            self.charas+='xx'
-                        elif ind==0:
-                            self.charas+='xx '
-                    else:
-                        self.charas+=temp[ind]
-                        if ind!=2:
-                            self.charas+=' '
+                self.charas = 'xx xxxx xx'
         
         self.frame_toShow = cv2.resize(self.frame_toNetwork,(self.resize_width,self.resize_height))
         if self.ret:
