@@ -167,7 +167,7 @@ class App:
         frame_toShow = cv2.cvtColor(frame_toShow, cv2.COLOR_BGR2RGB)
         self.photo_choosenFile = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame_toShow))
         self.canvas.create_image(0,0, image=self.photo_choosenFile,anchor = NW)
-        roix = cv2.imread('resources/GUIresources/history/his.jpg')
+        roix = cv2.imread('resources/GUIresources/history/basic.jpg')
         roix = cv2.resize(roix,(int(self.canvas_width/3),int(self.canvas_height/3)))
         self.photo_choosenFile1 = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(roix))
         self.canvas1.create_image(0,0, image=self.photo_choosenFile1,anchor = NW)
